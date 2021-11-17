@@ -8,7 +8,7 @@ const Persons = ({ persons, deletePerson, changeName }) => {
         <Person
           key={person.id}
           fullName={person.fullName}
-          deleted={() => deletePerson(person.id)}
+          deleted={() => deletePerson(person.id, person.fullName)}
           changeName={(event) => changeName(event, person.id)}
         />
       ))}

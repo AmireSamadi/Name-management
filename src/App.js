@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { Alert, Badge, Button } from "react-bootstrap";
+
+import { ToastContainer, toast } from "react-toastify";
+
 import Persons from "./components/person/persons";
 
 class App extends Component {
@@ -15,10 +19,19 @@ class App extends Component {
 
   //method Delete Person
 
-  deletePerson = (id) => {
+  deletePerson = (id, fullName) => {
     let persons = [...this.state.persons];
     let personFilter = persons.filter((person) => person.id !== id);
     this.setState({ persons: personFilter });
+    toast.error(`${fullName}${" "}با موفقیت حذف شد `, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
   // method change Name
   changeName = (event, id) => {
@@ -39,6 +52,15 @@ class App extends Component {
     if (person.fullName !== "" && person.fullName !== " ") {
       persons.push(person);
       this.setState({ persons, person: "" });
+      toast.success(`${person.fullName}${" "}با موفقیت اضافه شد `, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
   //method get persons
@@ -61,20 +83,26 @@ class App extends Component {
         />
       );
     }
-
+    //badgeStyle
+    let badgeStyle = [];
+    if (persons.length >= 3) badgeStyle.push("success");
+    if (persons.length === 2) badgeStyle.push("warning");
+    if (persons.length <= 1) badgeStyle.push("danger");
     return (
       <div className="rtl text-center">
-        <div className="alert alert-info">
+        <Alert variant="info">
           <h2>مدیریت کننده اشخاص</h2>
-        </div>
+        </Alert>
 
-        <h5 className="alert alert-light">
-          تعداد اشخاص{" "}
-          <span className="badge badge-pill badge-success">
-            {persons.length}
-          </span>{" "}
-          نفر می باشد
-        </h5>
+        <Alert variant="light">
+          <h5>
+            تعداد اشخاص{" "}
+            <Badge pill bg={badgeStyle} text="light">
+              {persons.length}
+            </Badge>{" "}
+            نفر می باشد
+          </h5>
+        </Alert>
 
         <div className="m-2 p-2">
           <form
@@ -90,9 +118,11 @@ class App extends Component {
                 value={this.state.person}
               />
               <div className="input-group-prepend">
-                <button
+                <Button
                   type="submit"
-                  className="btn btn-sm btn-success fa fa-plus-square"
+                  variant="success"
+                  size="sm"
+                  className="  fa fa-plus-square"
                   onClick={this.creatNewPerson}
                 />
               </div>
@@ -100,11 +130,25 @@ class App extends Component {
           </form>
         </div>
 
-        <button onClick={this.handelPerson} className="btn  btn-info ">
+        <Button
+          onClick={this.handelPerson}
+          variant={showPerson ? "info" : "danger "}
+        >
           نمایش اشخاص
-        </button>
+        </Button>
 
         {human}
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          rtl
+          pauseOnHover
+        />
       </div>
     );
   }
